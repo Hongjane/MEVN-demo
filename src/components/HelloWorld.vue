@@ -3,8 +3,12 @@
     <h1>{{ msg }}</h1>
     <span v-if="fetched">Raw data: {{ fetchedData }}</span>
     <el-row>
-      <el-button class="el-button" type="info" @click="fetchData">Fetch info</el-button>
+      Retrieve your info: <el-input class="el-input" v-model="username" placeholder="Username" type="text"></el-input>
     </el-row>
+    <el-row>
+      <el-button class="el-button" type="info" @click="fetchData(username)">Fetch info</el-button>
+    </el-row>
+    <span v-if="fetched">Welcome, {{ username }}!</span>
     <el-row>
       <el-input class="el-input" v-model="username" placeholder="Username" type="text"></el-input>
     </el-row>
@@ -14,9 +18,12 @@
     <el-row>
       <el-input class="el-input" v-model="gender" placeholder="Gender" type="text"></el-input>
     </el-row>
+    <span v-if="fetched && found">Not what you are looking for? Register now!</span>
+    <span v-if="fetched && !found">Found nothing? Register now!</span>
     <el-row>
       <el-button class="el-button" type="success" @click="register">Register</el-button>
     </el-row>
+    <h1 v-if="registered">Greetings {{ username }}, You are all set!</h1>
   </div>
 </template>
 
@@ -27,6 +34,8 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App',
       fetched: false,
+      found: false,
+      registered: false,
       fetchedData: [],
       username: '',
       age: '',
@@ -34,23 +43,38 @@ export default {
     }
   },
   methods: {
-    fetchData () {
-      this.$http.get('/api/login/get')
+    resetField (data) {
+      // this.username = ''
+      this.age = ''
+      this.gender = ''
+    },
+    getField (data) {
+      this.username = data.username
+      this.age = data.age
+      this.gender = data.gender
+    },
+    fetchData (queriedName) {
+      let params = {
+        username: queriedName
+      }
+      // Changing from GET method to POST method to retrieve data from server
+      this.$http.post('/api/login/get', params)
         .then((res) => {
-          console.log('Info successfully retrieved')
-          console.log(res.body)
-          this.fetchedData = res.body
-          this.username = this.fetchedData.username
-          this.age = this.fetchedData.age
-          this.gender = this.fetchedData.gender
-          this.$message({
-            message: 'Congrats, loading successful!',
-            type: 'success'
-          })
+          console.log('Info successfully retrieved: ' + Date())
+          console.log('body: ' + res.body)
+          this.fetched = true
+          if (res.body !== '') {
+            this.found = true
+            this.fetchedData = res.body
+            this.getField(this.fetchedData)
+            this.$message({
+              message: 'Congrats, loading successful!',
+              type: 'success'
+            })
+          }
         }).catch((err) => {
           console.log(err)
         })
-      this.fetched = true
     },
     register () {
       let params = {
@@ -65,11 +89,18 @@ export default {
             message: 'Congrats, insertion successful!',
             type: 'success'
           })
-          // var message = res.body.message
-          // alert(message)
+          this.registered = true
+          this.resetField()
         }).catch((err) => {
           console.log(err)
         })
+    }
+  },
+  watch: {
+    username (newVal, oldVal) {
+      if (this.fetched === true) {
+        this.fetched = false
+      }
     }
   }
 }

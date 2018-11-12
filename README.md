@@ -2,6 +2,9 @@
 
  (front-end)
 * Vue 2.0 + Element UI
+----
+* vue resource
+----
  (back-end)
 * Express
 * MongoDB (using mongoose)
