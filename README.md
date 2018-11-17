@@ -8,3 +8,10 @@
  (back-end)
 * Express
 * MongoDB (using mongoose)
+----
+UPDATE:
+Completion of a registration interface for user info, in which basic CRUD operations are supported
+
+----
+UPDATE:
+Partial completion of a image uploading component, featuring both the one for avatar upload (in ```./dist/static``` folder, in which a random url is generated to keep filename in secret) and the one for public uploads (in ```./static``` folder, and multiple uploads are supported)
