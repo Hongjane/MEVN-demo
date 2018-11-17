@@ -71,7 +71,9 @@
     "mongodb": "^3.1.9",
     "mongoose": "^5.3.11",
     "monk": "^6.0.6",
-    "mysql": "^2.16.0"
+    "mysql": "^2.16.0",
+    "formidable": "^1.2.1",
+    "silly-datetime": "^0.1.2"
   },
   "engines": {
     "node": ">= 6.0.0",

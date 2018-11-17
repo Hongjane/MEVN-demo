@@ -23,7 +23,10 @@ app.use(api)
 // app.use('/users', usersRouter)
 
 app.use('*', (req, res, next) => {
-  var home = fs.readFileSync(path.resolve(__dirname + '../dist/index.html'), 'utf-8')
+  var home = fs.readFileSync(path.join(__dirname, '../dist/index.html'), 'utf-8')
+  // res.setHeader('Access-Control-Allow-Origin', '*')
+  // res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With')
+  // res.setHeader('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS')
   res.send(home)
 })
 
